@@ -352,6 +352,26 @@ export default function Home() {
                     </p>
                   </div>
                 </a>
+
+                {data.platforms && data.platforms.filter(p => !p.hidden).map(platform => (
+                  <a 
+                    key={platform.id}
+                    href={platform.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-5 p-4 -mx-4 rounded-2xl hover:bg-[var(--secondary)]/10 transition-colors cursor-pointer"
+                  >
+                    <div className="w-14 h-14 bg-white/5 group-hover:bg-[var(--secondary)]/20 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 shadow-[0_0_15px_rgba(var(--secondary-rgb),0.1)] transition-colors overflow-hidden">
+                      <img src={platform.logoUrl} alt={platform.platformName} className="w-8 h-8 object-contain" />
+                    </div>
+                    <div className="min-w-0 pt-2">
+                      <p className="text-sm text-gray-500 mb-1 uppercase tracking-wider font-bold">{platform.platformName}</p>
+                      <p className="font-medium group-hover:text-[var(--secondary)] transition-colors break-all inline-block text-xl text-gray-200">
+                        {platform.userName}
+                      </p>
+                    </div>
+                  </a>
+                ))}
               </div>
             </div>
           </div>
