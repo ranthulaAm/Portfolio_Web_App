@@ -1,11 +1,12 @@
-import { motion } from 'motion/react';
-import { usePortfolioData } from '../hooks/usePortfolioData';
-import { Mail, Phone, Globe, MapPin, MessageSquare, Facebook, Instagram } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { usePortfolioData, Art } from '../hooks/usePortfolioData';
+import { Mail, Phone, Globe, MapPin, MessageSquare, Facebook, Instagram, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function Home() {
   const { data, loading } = usePortfolioData();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [selectedArt, setSelectedArt] = useState<Art | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -226,7 +227,8 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
-              className="group relative overflow-hidden rounded-2xl bg-[rgba(var(--primary-rgb),0.5)] aspect-square border border-white/10 shadow-2xl"
+              onClick={() => setSelectedArt(art)}
+              className="group relative overflow-hidden rounded-2xl bg-[rgba(var(--primary-rgb),0.5)] aspect-square border border-white/10 shadow-2xl cursor-pointer"
             >
               <img 
                 src={art.imageUrl} 
@@ -357,6 +359,47 @@ export default function Home() {
       <footer className="bg-[var(--primary)] py-12 text-center text-gray-500 text-sm px-4 border-t border-white/5 relative z-10">
         <p className="break-words font-medium tracking-wide">© {new Date().getFullYear()} {data.logoType === 'text' ? data.logoText : 'Ranthula Amarasekara'}. ALL RIGHTS RESERVED.</p>
       </footer>
+
+      {/* Art Detail Modal */}
+      <AnimatePresence>
+        {selectedArt && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedArt(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-12 bg-black/90 backdrop-blur-sm"
+          >
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedArt(null);
+              }}
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/70 hover:text-white bg-black/50 hover:bg-black/80 p-2 rounded-full transition-all z-50"
+            >
+              <X size={24} />
+            </button>
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-full max-h-full flex flex-col items-center justify-center"
+            >
+              <img
+                src={selectedArt.imageUrl}
+                alt={selectedArt.title}
+                className="max-w-full max-h-[80vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                referrerPolicy="no-referrer"
+              />
+              <div className="mt-4 text-center">
+                <span className="text-[var(--secondary)] font-bold text-xs mb-1 uppercase tracking-[0.2em]">{selectedArt.category}</span>
+                <h3 className="text-white text-2xl font-black tracking-tight">{selectedArt.title}</h3>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
