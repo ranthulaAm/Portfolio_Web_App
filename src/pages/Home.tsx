@@ -319,40 +319,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                <a 
-                  href="https://web.facebook.com/Ranthula.senmith" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="group flex items-start gap-5 p-4 -mx-4 rounded-2xl hover:bg-[#1877F2]/10 transition-colors cursor-pointer"
-                >
-                  <div className="w-14 h-14 bg-white/5 group-hover:bg-[#1877F2]/20 rounded-2xl flex items-center justify-center text-[#1877F2] shrink-0 border border-white/10 shadow-[0_0_15px_rgba(24,119,242,0.1)] transition-colors">
-                    <Facebook size={24} />
-                  </div>
-                  <div className="min-w-0 pt-2">
-                    <p className="text-sm text-gray-500 mb-1 uppercase tracking-wider font-bold">Facebook</p>
-                    <p className="font-medium group-hover:text-[#1877F2] transition-colors break-all inline-block text-xl text-gray-200">
-                      Ranthula.senmith
-                    </p>
-                  </div>
-                </a>
-
-                <a 
-                  href="https://www.instagram.com/_razor_s/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="group flex items-start gap-5 p-4 -mx-4 rounded-2xl hover:bg-[#E1306C]/10 transition-colors cursor-pointer"
-                >
-                  <div className="w-14 h-14 bg-white/5 group-hover:bg-[#E1306C]/20 rounded-2xl flex items-center justify-center text-[#E1306C] shrink-0 border border-white/10 shadow-[0_0_15px_rgba(225,48,108,0.1)] transition-colors">
-                    <Instagram size={24} />
-                  </div>
-                  <div className="min-w-0 pt-2">
-                    <p className="text-sm text-gray-500 mb-1 uppercase tracking-wider font-bold">Instagram</p>
-                    <p className="font-medium group-hover:text-[#E1306C] transition-colors break-all inline-block text-xl text-gray-200">
-                      _razor_s
-                    </p>
-                  </div>
-                </a>
-
                 {data.platforms && data.platforms.filter(p => !p.hidden).map(platform => (
                   <a 
                     key={platform.id}
@@ -372,6 +338,44 @@ export default function Home() {
                     </div>
                   </a>
                 ))}
+
+                {data.contact.facebookUrl && data.contact.facebookUsername && (
+                  <a 
+                    href={data.contact.facebookUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-5 p-4 -mx-4 rounded-2xl hover:bg-[#1877F2]/10 transition-colors cursor-pointer"
+                  >
+                    <div className="w-14 h-14 bg-white/5 group-hover:bg-[#1877F2]/20 rounded-2xl flex items-center justify-center text-[#1877F2] shrink-0 border border-white/10 shadow-[0_0_15px_rgba(24,119,242,0.1)] transition-colors">
+                      <Facebook size={24} />
+                    </div>
+                    <div className="min-w-0 pt-2">
+                      <p className="text-sm text-gray-500 mb-1 uppercase tracking-wider font-bold">Facebook</p>
+                      <p className="font-medium group-hover:text-[#1877F2] transition-colors break-all inline-block text-xl text-gray-200">
+                        {data.contact.facebookUsername}
+                      </p>
+                    </div>
+                  </a>
+                )}
+
+                {data.contact.instagramUrl && data.contact.instagramUsername && (
+                  <a 
+                    href={data.contact.instagramUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-5 p-4 -mx-4 rounded-2xl hover:bg-[#E1306C]/10 transition-colors cursor-pointer"
+                  >
+                    <div className="w-14 h-14 bg-white/5 group-hover:bg-[#E1306C]/20 rounded-2xl flex items-center justify-center text-[#E1306C] shrink-0 border border-white/10 shadow-[0_0_15px_rgba(225,48,108,0.1)] transition-colors">
+                      <Instagram size={24} />
+                    </div>
+                    <div className="min-w-0 pt-2">
+                      <p className="text-sm text-gray-500 mb-1 uppercase tracking-wider font-bold">Instagram</p>
+                      <p className="font-medium group-hover:text-[#E1306C] transition-colors break-all inline-block text-xl text-gray-200">
+                        {data.contact.instagramUsername}
+                      </p>
+                    </div>
+                  </a>
+                )}
               </div>
             </div>
           </div>
