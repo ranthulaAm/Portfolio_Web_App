@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const { data, loading } = usePortfolioData();
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,13 +14,17 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading && data) {
-      // Preload hero image
+      // Preload hero image and wait for it
       if (data.heroImage) {
         const img = new Image();
         img.src = data.heroImage;
+        img.onload = () => setImageLoaded(true);
+        img.onerror = () => setImageLoaded(true); // Fallback if image fails
+      } else {
+        setImageLoaded(true);
       }
       
-      // Preload portfolio images
+      // Preload portfolio images (background)
       if (data.arts && data.arts.length > 0) {
         data.arts.forEach((art: any) => {
           if (!art.hidden && art.imageUrl) {
@@ -31,7 +36,7 @@ export default function Home() {
     }
   }, [data, loading]);
 
-  if (loading) {
+  if (loading || !imageLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--primary)]">
         <div className="w-12 h-12 border-4 border-[var(--secondary)] border-t-transparent rounded-full animate-spin"></div>
