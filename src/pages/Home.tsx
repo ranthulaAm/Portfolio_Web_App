@@ -24,7 +24,7 @@ export default function Home() {
       } else {
         setImageLoaded(true);
       }
-      
+
       // Preload portfolio images (background)
       if (data.arts && data.arts.length > 0) {
         data.arts.forEach((art: any) => {
@@ -156,10 +156,11 @@ export default function Home() {
             <img 
               src={data.heroImage} 
               alt={data.logoText} 
-              className="w-full h-auto max-h-[600px] object-contain drop-shadow-[0_0_30px_rgba(var(--secondary-rgb),0.2)]"
+              className="w-full h-auto max-h-[600px] object-contain drop-shadow-[0_0_30px_rgba(var(--secondary-rgb),0.2)] transform-gpu"
               style={{ opacity: (data.heroImageOpacity ?? 100) / 100 }}
               referrerPolicy="no-referrer"
               fetchPriority="high"
+              decoding="async"
             />
           </motion.div>
           {/* Decorative elements */}
@@ -225,17 +226,18 @@ export default function Home() {
               key={art.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "100px" }}
               transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
               onClick={() => setSelectedArt(art)}
-              className="group relative overflow-hidden rounded-2xl bg-[rgba(var(--primary-rgb),0.5)] aspect-square border border-white/10 shadow-2xl cursor-pointer"
+              className="group relative overflow-hidden rounded-2xl bg-[rgba(var(--primary-rgb),0.5)] aspect-square border border-white/10 shadow-2xl cursor-pointer transform-gpu"
             >
               <img 
                 src={art.imageUrl} 
                 alt={art.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100 will-change-transform"
                 referrerPolicy="no-referrer"
                 loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
                 <span className="text-[var(--secondary)] font-bold text-xs mb-1 uppercase tracking-[0.2em] drop-shadow-[0_0_8px_rgba(var(--secondary-rgb),0.8)]">{art.category}</span>
@@ -389,8 +391,9 @@ export default function Home() {
               <img
                 src={selectedArt.imageUrl}
                 alt={selectedArt.title}
-                className="max-w-full max-h-[80vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                className="max-w-full max-h-[80vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl transform-gpu"
                 referrerPolicy="no-referrer"
+                decoding="async"
               />
               <div className="mt-4 text-center">
                 <span className="text-[var(--secondary)] font-bold text-xs mb-1 uppercase tracking-[0.2em]">{selectedArt.category}</span>
