@@ -32,6 +32,15 @@ export interface Art {
   hidden?: boolean;
 }
 
+export interface Platform {
+  id: string;
+  platformName: string;
+  userName: string;
+  url: string;
+  logoUrl: string;
+  hidden?: boolean;
+}
+
 export interface PortfolioData {
   logoType: 'text' | 'image';
   logoText: string;
@@ -59,6 +68,7 @@ export interface PortfolioData {
   experiences: Experience[];
   educations: Education[];
   arts: Art[];
+  platforms: Platform[];
   secondaryColor?: string;
   primaryColor?: string;
 }
@@ -114,6 +124,7 @@ const defaultData: PortfolioData = {
     { id: '2', degree: 'GCE Advanced Level (A/L)', status: '(Pending)', institution: 'Physical Science Stream' },
   ],
   arts: initialArts,
+  platforms: [],
   secondaryColor: '#1dbf73',
   primaryColor: '#050505'
 };
@@ -253,6 +264,10 @@ export function usePortfolioData() {
     syncData({ ...data, arts: newArts });
   };
 
+  const addPlatform = (platform: Omit<Platform, 'id'>) => syncData({ ...data, platforms: [...(data.platforms || []), { ...platform, id: Date.now().toString() }] });
+  const updatePlatform = (id: string, updates: Partial<Platform>) => syncData({ ...data, platforms: (data.platforms || []).map(p => p.id === id ? { ...p, ...updates } : p) });
+  const removePlatform = (id: string) => syncData({ ...data, platforms: (data.platforms || []).filter(p => p.id !== id) });
+
   const updateSecondaryColor = (color: string) => syncData({ ...data, secondaryColor: color });
   const updatePrimaryColor = (color: string) => syncData({ ...data, primaryColor: color });
 
@@ -266,6 +281,7 @@ export function usePortfolioData() {
     addExperience, updateExperience, removeExperience, 
     addEducation, updateEducation, removeEducation, 
     addArt, updateArt, removeArt, reorderArt,
+    addPlatform, updatePlatform, removePlatform,
     updateSecondaryColor,
     updatePrimaryColor
   };
