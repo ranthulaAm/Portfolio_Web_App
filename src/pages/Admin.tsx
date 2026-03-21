@@ -234,7 +234,7 @@ export default function Admin() {
     );
   }
 
-  const tabs = ['General', 'Contact', 'Skills', 'Experience', 'Education', 'Portfolio', 'Platforms'];
+  const tabs = ['General', 'Contact', 'Skills', 'Experience', 'Education', 'Portfolio'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -485,6 +485,178 @@ export default function Admin() {
                 onChange={e => updateContact({ ...data.contact, location: e.target.value })}
                 className="w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
               />
+            </div>
+
+            <hr className="my-8 border-gray-200" />
+            
+            <h2 className="text-xl font-bold mb-4">Default Social Platforms</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Facebook Username</label>
+                <input 
+                  type="text" 
+                  value={data.contact.facebookUsername || ''}
+                  onChange={e => updateContact({ ...data.contact, facebookUsername: e.target.value })}
+                  className="w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Facebook URL</label>
+                <input 
+                  type="url" 
+                  value={data.contact.facebookUrl || ''}
+                  onChange={e => updateContact({ ...data.contact, facebookUrl: e.target.value })}
+                  className="w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Instagram Username</label>
+                <input 
+                  type="text" 
+                  value={data.contact.instagramUsername || ''}
+                  onChange={e => updateContact({ ...data.contact, instagramUsername: e.target.value })}
+                  className="w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Instagram URL</label>
+                <input 
+                  type="url" 
+                  value={data.contact.instagramUrl || ''}
+                  onChange={e => updateContact({ ...data.contact, instagramUrl: e.target.value })}
+                  className="w-full bg-gray-50 border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                />
+              </div>
+            </div>
+
+            <hr className="my-8 border-gray-200" />
+            
+            <h2 className="text-xl font-bold mb-4">Additional Social Platforms</h2>
+            
+            <form onSubmit={handleAddPlatform} className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm mb-8">
+              <h3 className="font-bold mb-4 text-gray-800">Add New Platform</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input 
+                  type="text" 
+                  placeholder="Platform Name (e.g., LinkedIn)" 
+                  value={newPlatform.platformName} 
+                  onChange={e => setNewPlatform({...newPlatform, platformName: e.target.value})}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                  required
+                />
+                <input 
+                  type="text" 
+                  placeholder="Your Name/Handle (e.g., John Doe)" 
+                  value={newPlatform.userName} 
+                  onChange={e => setNewPlatform({...newPlatform, userName: e.target.value})}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                  required
+                />
+                <input 
+                  type="url" 
+                  placeholder="Profile URL" 
+                  value={newPlatform.url} 
+                  onChange={e => setNewPlatform({...newPlatform, url: e.target.value})}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                  required
+                />
+                <div className="w-full">
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    ref={platformFileInputRef}
+                    disabled={isUploading}
+                    onChange={e => handleImageUpload(e, url => setNewPlatform({...newPlatform, logoUrl: url}))}
+                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#1dbf73] file:text-white hover:file:bg-[#19a463] cursor-pointer disabled:opacity-50"
+                  />
+                  {isUploading && <p className="text-sm text-[#1dbf73] mt-2 animate-pulse">Uploading image...</p>}
+                  {newPlatform.logoUrl && (
+                    <div className="mt-2 w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
+                      <img src={newPlatform.logoUrl} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <button 
+                type="submit" 
+                disabled={isUploading}
+                className="bg-[#1dbf73] text-white px-6 py-2 rounded-md hover:bg-[#19a463] transition-colors flex items-center gap-2 font-medium disabled:opacity-50"
+              >
+                <Plus size={18} /> Add Platform
+              </button>
+            </form>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(data.platforms || []).map(platform => (
+                <div key={platform.id} className={`bg-white p-6 rounded-xl border ${platform.hidden ? 'border-gray-200 opacity-60' : 'border-gray-200'} shadow-sm relative group`}>
+                  {editingPlatform === platform.id ? (
+                    <div className="space-y-4">
+                      <input 
+                        type="text" 
+                        value={platform.platformName} 
+                        onChange={e => updatePlatform(platform.id, { platformName: e.target.value })}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                      />
+                      <input 
+                        type="text" 
+                        value={platform.userName} 
+                        onChange={e => updatePlatform(platform.id, { userName: e.target.value })}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                      />
+                      <input 
+                        type="url" 
+                        value={platform.url} 
+                        onChange={e => updatePlatform(platform.id, { url: e.target.value })}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#1dbf73] focus:border-[#1dbf73]"
+                      />
+                      <button 
+                        onClick={() => setEditingPlatform(null)}
+                        className="bg-[#1dbf73] text-white px-4 py-2 rounded-md hover:bg-[#19a463] transition-colors w-full flex items-center justify-center gap-2 text-sm font-medium"
+                      >
+                        <Check size={16} /> Save Changes
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 shrink-0">
+                          <img src={platform.logoUrl} alt={platform.platformName} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-bold text-lg truncate">{platform.platformName}</h3>
+                          <p className="text-gray-500 text-sm truncate">{platform.userName}</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-400 truncate mb-4">{platform.url}</p>
+                      
+                      <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
+                        <button 
+                          onClick={() => updatePlatform(platform.id, { hidden: !platform.hidden })}
+                          className={`p-2 rounded-md transition-colors ${platform.hidden ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
+                          title={platform.hidden ? "Show" : "Hide"}
+                        >
+                          {platform.hidden ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                        <button 
+                          onClick={() => setEditingPlatform(platform.id)}
+                          className="text-gray-500 hover:text-[#1dbf73] p-2 bg-gray-50 hover:bg-green-50 rounded-md transition-colors"
+                          title="Edit"
+                        >
+                          <Edit2 size={18} />
+                        </button>
+                        <button 
+                          onClick={() => handleDeletePlatform(platform.id)}
+                          className="text-gray-500 hover:text-red-500 p-2 bg-gray-50 hover:bg-red-50 rounded-md transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
           </motion.div>
         )}
@@ -889,137 +1061,7 @@ export default function Admin() {
           </motion.div>
         )}
 
-        {/* PLATFORMS TAB */}
-        {activeTab === 'Platforms' && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
-            <h2 className="text-xl font-bold mb-4">Social Platforms</h2>
-            
-            <form onSubmit={handleAddPlatform} className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm mb-8">
-              <h3 className="font-bold mb-4 text-gray-800">Add New Platform</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input 
-                  type="text" 
-                  placeholder="Platform Name (e.g., LinkedIn)" 
-                  value={newPlatform.platformName} 
-                  onChange={e => setNewPlatform({...newPlatform, platformName: e.target.value})}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
-                  required
-                />
-                <input 
-                  type="text" 
-                  placeholder="Your Name/Handle (e.g., John Doe)" 
-                  value={newPlatform.userName} 
-                  onChange={e => setNewPlatform({...newPlatform, userName: e.target.value})}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
-                  required
-                />
-                <input 
-                  type="url" 
-                  placeholder="Profile URL" 
-                  value={newPlatform.url} 
-                  onChange={e => setNewPlatform({...newPlatform, url: e.target.value})}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73]"
-                  required
-                />
-                <div className="w-full">
-                  <input 
-                    type="file" 
-                    accept="image/*"
-                    ref={platformFileInputRef}
-                    disabled={isUploading}
-                    onChange={e => handleImageUpload(e, url => setNewPlatform({...newPlatform, logoUrl: url}))}
-                    className="w-full bg-white border border-gray-300 rounded-md px-4 py-2 focus:ring-[#1dbf73] focus:border-[#1dbf73] file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#1dbf73] file:text-white hover:file:bg-[#19a463] cursor-pointer disabled:opacity-50"
-                  />
-                  {isUploading && <p className="text-sm text-[#1dbf73] mt-2 animate-pulse">Uploading image...</p>}
-                  {newPlatform.logoUrl && (
-                    <div className="mt-2 w-12 h-12 rounded-lg overflow-hidden border border-gray-200">
-                      <img src={newPlatform.logoUrl} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <button 
-                type="submit" 
-                disabled={isUploading}
-                className="bg-[#1dbf73] text-white px-6 py-2 rounded-md hover:bg-[#19a463] transition-colors flex items-center gap-2 font-medium disabled:opacity-50"
-              >
-                <Plus size={18} /> Add Platform
-              </button>
-            </form>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(data.platforms || []).map(platform => (
-                <div key={platform.id} className={`bg-white p-6 rounded-xl border ${platform.hidden ? 'border-gray-200 opacity-60' : 'border-gray-200'} shadow-sm relative group`}>
-                  {editingPlatform === platform.id ? (
-                    <div className="space-y-4">
-                      <input 
-                        type="text" 
-                        value={platform.platformName} 
-                        onChange={e => updatePlatform(platform.id, { platformName: e.target.value })}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#1dbf73] focus:border-[#1dbf73]"
-                      />
-                      <input 
-                        type="text" 
-                        value={platform.userName} 
-                        onChange={e => updatePlatform(platform.id, { userName: e.target.value })}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#1dbf73] focus:border-[#1dbf73]"
-                      />
-                      <input 
-                        type="url" 
-                        value={platform.url} 
-                        onChange={e => updatePlatform(platform.id, { url: e.target.value })}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-[#1dbf73] focus:border-[#1dbf73]"
-                      />
-                      <button 
-                        onClick={() => setEditingPlatform(null)}
-                        className="bg-[#1dbf73] text-white px-4 py-2 rounded-md hover:bg-[#19a463] transition-colors w-full flex items-center justify-center gap-2 text-sm font-medium"
-                      >
-                        <Check size={16} /> Save Changes
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 rounded-lg overflow-hidden border border-gray-200 shrink-0">
-                          <img src={platform.logoUrl} alt={platform.platformName} className="w-full h-full object-cover" />
-                        </div>
-                        <div className="min-w-0">
-                          <h3 className="font-bold text-lg truncate">{platform.platformName}</h3>
-                          <p className="text-gray-500 text-sm truncate">{platform.userName}</p>
-                        </div>
-                      </div>
-                      <p className="text-sm text-gray-400 truncate mb-4">{platform.url}</p>
-                      
-                      <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                        <button 
-                          onClick={() => updatePlatform(platform.id, { hidden: !platform.hidden })}
-                          className={`p-2 rounded-md transition-colors ${platform.hidden ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}
-                          title={platform.hidden ? "Show" : "Hide"}
-                        >
-                          {platform.hidden ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
-                        <button 
-                          onClick={() => setEditingPlatform(platform.id)}
-                          className="text-gray-500 hover:text-[#1dbf73] p-2 bg-gray-50 hover:bg-green-50 rounded-md transition-colors"
-                          title="Edit"
-                        >
-                          <Edit2 size={18} />
-                        </button>
-                        <button 
-                          onClick={() => handleDeletePlatform(platform.id)}
-                          className="text-gray-500 hover:text-red-500 p-2 bg-gray-50 hover:bg-red-50 rounded-md transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
 
       </div>
 
