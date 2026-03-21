@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: settings
+    // Document ID: portfolio
+    // Fields:
+    //   - logoType: string (enum: 'text', 'image')
+    //   - logoText: string
+    //   - logoImageUrl: string
+    //   - heroTitle: string
+    //   - heroSubtitle: string
+    //   - heroBio: string
+    //   - heroImage: string
+    //   - sectionTitles: map
+    //   - contact: map
+    //   - skills: list of maps
+    //   - experiences: list of maps
+    //   - educations: list of maps
+    //   - arts: list of maps
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+             (request.auth.token.email == "ranthuls112@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    function isValidPortfolioData(data) {
+      return data.keys().hasAll(['logoType', 'heroTitle', 'heroSubtitle', 'heroBio', 'heroImage', 'sectionTitles', 'contact', 'skills', 'experiences', 'educations', 'arts']) &&
+             data.logoType in ['text', 'image'] &&
+             data.heroTitle is string && data.heroTitle.size() < 200 &&
+             data.heroSubtitle is string && data.heroSubtitle.size() < 500 &&
+             data.heroBio is string && data.heroBio.size() < 2000 &&
+             data.heroImage is string && data.heroImage.size() < 1000 &&
+             data.sectionTitles is map &&
+             data.contact is map &&
+             data.skills is list &&
+             data.experiences is list &&
+             data.educations is list &&
+             data.arts is list;
+    }
+
+    match /settings/portfolio {
+      allow read: if true;
+      allow write: if isAdmin() && isValidPortfolioData(request.resource.data);
+    }
+
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

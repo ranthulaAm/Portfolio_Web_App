@@ -1,0 +1,111 @@
+{
+  "entities": {
+    "PortfolioData": {
+      "title": "PortfolioData",
+      "description": "The main configuration and content for the portfolio website.",
+      "type": "object",
+      "properties": {
+        "logoType": {
+          "type": "string",
+          "enum": ["text", "image"],
+          "description": "Whether to use a text logo or an image logo."
+        },
+        "logoText": {
+          "type": "string",
+          "description": "The text to display if logoType is 'text'."
+        },
+        "logoImageUrl": {
+          "type": "string",
+          "description": "The URL of the logo image if logoType is 'image'."
+        },
+        "heroTitle": {
+          "type": "string",
+          "description": "The main title in the hero section."
+        },
+        "heroSubtitle": {
+          "type": "string",
+          "description": "The subtitle in the hero section."
+        },
+        "heroBio": {
+          "type": "string",
+          "description": "The biography text in the hero section."
+        },
+        "heroImage": {
+          "type": "string",
+          "description": "The URL of the portrait image in the hero section."
+        },
+        "sectionTitles": {
+          "type": "object",
+          "properties": {
+            "skills": { "type": "string" },
+            "experience": { "type": "string" },
+            "portfolio": { "type": "string" },
+            "portfolioSub": { "type": "string" },
+            "contact": { "type": "string" },
+            "contactSub": { "type": "string" }
+          }
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "phone": { "type": "string" },
+            "email": { "type": "string" },
+            "website": { "type": "string" },
+            "location": { "type": "string" }
+          }
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "percentage": { "type": "number" }
+            }
+          }
+        },
+        "experiences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" }
+            }
+          }
+        },
+        "educations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "degree": { "type": "string" },
+              "status": { "type": "string" },
+              "institution": { "type": "string" }
+            }
+          }
+        },
+        "arts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "imageUrl": { "type": "string" },
+              "category": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "settings/portfolio": {
+      "schema": "PortfolioData",
+      "description": "The single document containing all portfolio settings and content."
+    }
+  }
+}
