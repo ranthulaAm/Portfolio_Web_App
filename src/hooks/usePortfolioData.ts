@@ -230,6 +230,27 @@ export function usePortfolioData() {
   const addSkill = (skill: Omit<Skill, 'id'>) => syncData({ ...data, skills: [...data.skills, { ...skill, id: Date.now().toString() }] });
   const updateSkill = (id: string, updates: Partial<Skill>) => syncData({ ...data, skills: data.skills.map(s => s.id === id ? { ...s, ...updates } : s) });
   const removeSkill = (id: string) => syncData({ ...data, skills: data.skills.filter(s => s.id !== id) });
+  const reorderSkill = (id: string, direction: 'up' | 'down' | 'top' | 'bottom') => {
+    const index = data.skills.findIndex(s => s.id === id);
+    if (index === -1) return;
+    if ((direction === 'up' || direction === 'top') && index === 0) return;
+    if ((direction === 'down' || direction === 'bottom') && index === data.skills.length - 1) return;
+
+    const newSkills = [...data.skills];
+    const [movedSkill] = newSkills.splice(index, 1);
+
+    if (direction === 'top') {
+      newSkills.unshift(movedSkill);
+    } else if (direction === 'bottom') {
+      newSkills.push(movedSkill);
+    } else if (direction === 'up') {
+      newSkills.splice(index - 1, 0, movedSkill);
+    } else if (direction === 'down') {
+      newSkills.splice(index + 1, 0, movedSkill);
+    }
+    
+    syncData({ ...data, skills: newSkills });
+  };
   
   const addExperience = (exp: Omit<Experience, 'id'>) => syncData({ ...data, experiences: [...data.experiences, { ...exp, id: Date.now().toString() }] });
   const updateExperience = (id: string, updates: Partial<Experience>) => syncData({ ...data, experiences: data.experiences.map(e => e.id === id ? { ...e, ...updates } : e) });
@@ -277,7 +298,7 @@ export function usePortfolioData() {
     updateGeneral, 
     updateSectionTitles,
     updateContact, 
-    addSkill, updateSkill, removeSkill, 
+    addSkill, updateSkill, removeSkill, reorderSkill,
     addExperience, updateExperience, removeExperience, 
     addEducation, updateEducation, removeEducation, 
     addArt, updateArt, removeArt, reorderArt,
