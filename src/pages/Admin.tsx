@@ -9,7 +9,7 @@ import { compressImage } from '../utils/imageCompression';
 export default function Admin() {
   const { 
     data, loading, updateGeneral, updateContact, 
-    addSkill, updateSkill, removeSkill, 
+    addSkill, updateSkill, removeSkill, reorderSkill,
     addExperience, updateExperience, removeExperience, 
     addEducation, updateEducation, removeEducation, 
     addArt, updateArt, removeArt, reorderArt,
@@ -542,6 +542,22 @@ export default function Admin() {
                         </div>
                       </div>
                       <div className="flex gap-2 shrink-0">
+                        <div className="flex flex-col border-r border-gray-200 pr-2 mr-1">
+                          <button 
+                            onClick={() => reorderSkill(skill.id, 'up')}
+                            className="text-gray-400 hover:text-gray-700 p-0.5"
+                            title="Move Up"
+                          >
+                            <ArrowUp size={14} />
+                          </button>
+                          <button 
+                            onClick={() => reorderSkill(skill.id, 'down')}
+                            className="text-gray-400 hover:text-gray-700 p-0.5"
+                            title="Move Down"
+                          >
+                            <ArrowDown size={14} />
+                          </button>
+                        </div>
                         <button 
                           onClick={() => updateSkill(skill.id, { hidden: !skill.hidden })}
                           className={`p-2 rounded-md ${skill.hidden ? 'text-gray-500 hover:bg-gray-200' : 'text-[#1dbf73] hover:bg-green-50'}`}
