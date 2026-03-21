@@ -63,6 +63,10 @@ export interface PortfolioData {
     email: string;
     website: string;
     location: string;
+    facebookUrl?: string;
+    facebookUsername?: string;
+    instagramUrl?: string;
+    instagramUsername?: string;
   };
   skills: Skill[];
   experiences: Experience[];
@@ -103,7 +107,11 @@ const defaultData: PortfolioData = {
     phone: "0712 132 855",
     email: "ranthuls112@gmail.com",
     website: "https://ranthulaam.github.io/portfolio/",
-    location: "414/2, Thuduwegedara\nKiriwaththuduwa, Homagama\nSri Lanka (10200)"
+    location: "414/2, Thuduwegedara\nKiriwaththuduwa, Homagama\nSri Lanka (10200)",
+    facebookUrl: "https://web.facebook.com/Ranthula.senmith",
+    facebookUsername: "Ranthula.senmith",
+    instagramUrl: "https://www.instagram.com/_razor_s/",
+    instagramUsername: "_razor_s"
   },
   skills: [
     { id: '1', name: 'Adobe Illustrator', percentage: 90 },
