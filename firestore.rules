@@ -51,7 +51,7 @@ service cloud.firestore {
 
     match /settings/portfolio {
       allow read: if true;
-      allow write: if isAdmin() && isValidPortfolioData(request.resource.data);
+      allow write: if isAdmin();
     }
 
     match /test/connection {
