@@ -30,7 +30,7 @@ export default function Admin() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setIsAuthenticated(!!currentUser);
+      setIsAuthenticated(!!currentUser && currentUser.email === 'ranthuls112@gmail.com');
       setAuthLoading(false);
     });
     return () => unsubscribe();
@@ -68,7 +68,12 @@ export default function Admin() {
     e.preventDefault();
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      
+      if (result.user.email !== 'ranthuls112@gmail.com') {
+        await signOut(auth);
+        setError('Access Denied: You are not an admin. Only ranthuls112@gmail.com can access this panel.');
+      }
     } catch (err: any) {
       console.error("Login failed", err);
       setError(err.message || 'Failed to sign in with Google');
@@ -238,6 +243,12 @@ export default function Admin() {
           <h2 className="text-3xl font-black mb-2 text-gray-900">Admin Access</h2>
           <p className="text-gray-500 mb-8">Please sign in with your admin Google account</p>
           
+          {error && (
+            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm font-medium border border-red-100">
+              {error}
+            </div>
+          )}
+
           <button type="submit" className="w-full bg-[#1dbf73] hover:bg-[#19a463] text-white py-4 rounded-lg font-bold transition-colors text-lg flex items-center justify-center gap-3">
             Sign in with Google
           </button>
