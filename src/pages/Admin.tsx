@@ -1,9 +1,10 @@
 import { useState, useRef, FormEvent, ChangeEvent, useEffect } from 'react';
 import { usePortfolioData } from '../hooks/usePortfolioData';
-import { Trash2, Plus, Image as ImageIcon, Lock, Upload, Edit2, X, Check, Eye, EyeOff, ArrowUp, ArrowDown, ArrowUpToLine, ArrowDownToLine } from 'lucide-react';
+import { Trash2, Plus, Image as ImageIcon, Lock, Upload, Edit2, X, Check, Eye, EyeOff, ArrowUp, ArrowDown, ArrowUpToLine, ArrowDownToLine, LogOut } from 'lucide-react';
 import { motion } from 'motion/react';
-import { storage } from '../firebase';
+import { storage, auth } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { compressImage } from '../utils/imageCompression';
 
 export default function Admin() {
@@ -19,11 +20,21 @@ export default function Admin() {
   } = usePortfolioData();
   
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState('General');
   const [error, setError] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ message: string, onConfirm: () => void } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsAuthenticated(!!currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [newArt, setNewArt] = useState({ title: '', imageUrl: '', category: '' });
   const [newSkill, setNewSkill] = useState({ name: '', percentage: 50 });
@@ -45,7 +56,7 @@ export default function Admin() {
   const heroFileInputRef = useRef<HTMLInputElement>(null);
   const platformFileInputRef = useRef<HTMLInputElement>(null);
 
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-12 h-12 border-4 border-[#1dbf73] border-t-transparent rounded-full animate-spin"></div>
@@ -53,13 +64,22 @@ export default function Admin() {
     );
   }
 
-  const handleLogin = (e: FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-    if (password === '3963') {
-      setIsAuthenticated(true);
-    } else {
-      setError('Incorrect password');
-      setPassword('');
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (err: any) {
+      console.error("Login failed", err);
+      setError(err.message || 'Failed to sign in with Google');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Logout failed", err);
     }
   };
 
@@ -216,18 +236,10 @@ export default function Admin() {
             <Lock size={32} />
           </div>
           <h2 className="text-3xl font-black mb-2 text-gray-900">Admin Access</h2>
-          <p className="text-gray-500 mb-8">Please enter the password to continue</p>
+          <p className="text-gray-500 mb-8">Please sign in with your admin Google account</p>
           
-          <input 
-            type="password" 
-            value={password} 
-            onChange={e => setPassword(e.target.value)} 
-            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 mb-6 focus:outline-none focus:ring-2 focus:ring-[#1dbf73] focus:border-transparent text-center text-xl tracking-widest text-gray-900" 
-            placeholder="••••" 
-            autoFocus
-          />
-          <button type="submit" className="w-full bg-[#1dbf73] hover:bg-[#19a463] text-white py-4 rounded-lg font-bold transition-colors text-lg">
-            Unlock Dashboard
+          <button type="submit" className="w-full bg-[#1dbf73] hover:bg-[#19a463] text-white py-4 rounded-lg font-bold transition-colors text-lg flex items-center justify-center gap-3">
+            Sign in with Google
           </button>
         </motion.form>
       </div>
@@ -243,12 +255,16 @@ export default function Admin() {
           <h1 className="text-3xl font-black text-gray-900">Dashboard</h1>
           <p className="text-gray-500 mt-1">Manage your portfolio content</p>
         </div>
-        <button 
-          onClick={() => setIsAuthenticated(false)}
-          className="text-gray-500 hover:text-gray-900 font-medium transition-colors"
-        >
-          Lock Dashboard
-        </button>
+        <div className="flex items-center gap-4">
+          {user && <span className="text-sm text-gray-500 hidden sm:inline-block">{user.email}</span>}
+          <button 
+            onClick={handleLogout}
+            className="text-gray-500 hover:text-red-500 font-medium transition-colors flex items-center gap-2"
+          >
+            <LogOut size={18} />
+            Sign Out
+          </button>
+        </div>
       </div>
 
       {/* Tabs */}
